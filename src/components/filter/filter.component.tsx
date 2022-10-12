@@ -1,13 +1,10 @@
 import React from 'react';
-import styles from "../../pages/courses/courses.module.scss";
-import IconButton from "@mui/material/IconButton";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import {useSelector} from "react-redux";
-import {getAddresses, getCategories, getPaymentTerms} from "../../store/courses/courses.selectors";
+import {selectAddresses, selectCategories, selectPaymentTerms} from "../../store/courses/courses.selectors";
 
 type Props = {
     category: string,
@@ -16,8 +13,6 @@ type Props = {
     handleAddressChange: (event: SelectChangeEvent) => void,
     paymentTerm: string,
     handlePaymentTermChange: (event: SelectChangeEvent) => void,
-
-
 }
 
 const Filter = ({
@@ -29,9 +24,9 @@ const Filter = ({
                     handlePaymentTermChange
                 }: Props) => {
 
-    const categories = useSelector(getCategories) || []
-    const addresses = useSelector(getAddresses) || []
-    const paymentTerms = useSelector(getPaymentTerms) || []
+    const categories = useSelector(selectCategories) || []
+    const addresses = useSelector(selectAddresses) || []
+    const paymentTerms = useSelector(selectPaymentTerms) || []
 
 
     return (
@@ -49,14 +44,14 @@ const Filter = ({
                     <MenuItem value="">
                         <em>Все</em>
                     </MenuItem>
-                    {categories.map(term => <MenuItem value={term}>{term}</MenuItem>)}
+                    {categories.map(category => <MenuItem key={category} value={category}>{category}</MenuItem>)}
                 </Select>
             </FormControl>
             <FormControl sx={{m: 1, minWidth: 260}} size="small">
                 <InputLabel>Адрес</InputLabel>
                 <Select
                     labelId="Address"
-                    id="demo-select-small"
+                    id="adresses"
                     value={address}
                     label="Адрес"
                     onChange={handleAddressChange}
@@ -64,7 +59,7 @@ const Filter = ({
                     <MenuItem value="">
                         <em>Все</em>
                     </MenuItem>
-                    {addresses.map(address => <MenuItem value={address}>{address}</MenuItem>)}
+                    {addresses.map(address => <MenuItem key={address} value={address}>{address}</MenuItem>)}
                 </Select>
             </FormControl>
             <FormControl sx={{m: 1, minWidth: 260}} size="small">
@@ -79,7 +74,7 @@ const Filter = ({
                     <MenuItem value="">
                         <em>Все</em>
                     </MenuItem>
-                    {paymentTerms.map(term => <MenuItem value={term}>{term}</MenuItem>)}
+                    {paymentTerms.map(term => <MenuItem key={term} value={term}>{term}</MenuItem>)}
                 </Select>
             </FormControl>
         </>

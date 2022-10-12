@@ -1,4 +1,6 @@
-import {categories} from "./initialState";
+export enum COURSES_ACTION_TYPES {
+    SET_COURSES = 'course/SET_COURSES'
+}
 
 export interface ICourse{
     id: string
@@ -9,7 +11,7 @@ export interface ICourse{
     description: string
     imageUrl: string
     paymentTerms: string
-    studentsAge: number[]
+    studentsAge?: number[]
     teacherName: string
 }
 

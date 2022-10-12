@@ -7,9 +7,11 @@ import EditIcon from '@mui/icons-material/Edit';
 
 type Props = {
     course: ICourse
+    setId: (id: string) => void
+    handleOpen: () => void
 }
 
-const Course = ({course}:Props) => {
+const Course = ({course, setId, handleOpen}:Props) => {
     return (
         <Card>
             <CardMedia
@@ -43,11 +45,14 @@ const Course = ({course}:Props) => {
             </CardContent>
             <CardActions>
                 <IconButton color='primary'
-                            title='Task in progress'
-                            onClick={() => {}}>
+                            title='Редактировать'
+                            onClick={() => {
+                                setId(course.id)
+                                handleOpen()
+                            }}>
                     <EditIcon/>
                 </IconButton>
-                <IconButton color='error' title='Delete task' onClick={() => {}}>
+                <IconButton color='error' title='Удалить курс' onClick={() => {}}>
                     <DeleteRoundedIcon/>
                 </IconButton>
             </CardActions>

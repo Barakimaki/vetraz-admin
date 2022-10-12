@@ -1,51 +1,75 @@
 import styles from './courses.module.scss'
-import Course from "../../components/course/course";
-import {SelectChangeEvent} from '@mui/material/Select';
+import Course from "../../components/course/course.component";
 import React, {useState} from "react";
-import Filter from "../../components/filter/filter";
-import {getCourses} from "../../store/courses/courses.selectors";
-import {useDispatch, useSelector} from "react-redux";
+import {selectCourses} from "../../store/courses/courses.selectors";
+import { useSelector } from "react-redux";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import IconButton from "@mui/material/IconButton";
+import {Backdrop} from "@mui/material";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import CourseForm from "../../components/courseForm/courseForm.component";
 
 
+type Props = {
+    category: string
+    address: string
+    paymentTerm: string
+}
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1200,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 
-const Courses = () => {
+const Courses = ({category, address, paymentTerm}:Props) => {
 
-    const courses = useSelector(getCourses) || []
+    const courses = useSelector(selectCourses) || []
 
-    const [category, setCategory] = useState('');
-    const [address, setAddress] = useState('');
-    const [paymentTerm, setPaymentTerm] = useState('');
-
-    const handleCategoryChange = (event: SelectChangeEvent) => {
-        setCategory(event.target.value);
-    };
-    const handleAddressChange = (event: SelectChangeEvent) => {
-        setAddress(event.target.value);
-    };
-    const handlePaymentTermChange = (event: SelectChangeEvent) => {
-        setPaymentTerm(event.target.value);
-    };
-
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [id, setId] = useState('')
 
     return (
         <div className={styles.coursesContainer}>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={open}
+                onClose={()=>{
+                    setId('')
+                    handleClose()
+                }}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+            >
+                <Fade in={open}>
+                    <Box sx={style}>
+                        <CourseForm closeForm={handleClose} id={id} setId={setId}/>
+                    </Box>
+                </Fade>
+            </Modal>
             <div className={styles.editBar}>
                 <IconButton color="primary" size='large' title='Добавить курс'>
-                    <AddCircleOutlineRoundedIcon onClick={() => {
+                    <AddCircleOutlineRoundedIcon onClick={()=>{
+                        setId('')
+                        handleOpen()
                     }}/>
                 </IconButton>
-                <Filter category={category}
-                        handleCategoryChange={handleCategoryChange}
-                        address={address}
-                        handleAddressChange={handleAddressChange}
-                        paymentTerm={paymentTerm}
-                        handlePaymentTermChange={handlePaymentTermChange}
-                />
             </div>
-
             <div className={styles.courses}>
                 {courses.filter(course=>{
                 if((course.category === category || !category) &&
@@ -53,9 +77,9 @@ const Courses = () => {
                     (course.paymentTerms === paymentTerm || !paymentTerm)){
                     return true
                 } else {return false}
-            }).map(course=><Course key={course.id} course={course}/>)}
-
+            }).map(course=><Course key={course.id} course={course} handleOpen={handleOpen} setId={setId}/>)}
             </div>
+
         </div>
     );
 };

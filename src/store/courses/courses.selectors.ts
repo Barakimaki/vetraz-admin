@@ -1,7 +1,38 @@
-import {AppStateType} from "../store";
-import {ICourse} from "./courses.types";
+import {createSelector} from 'reselect';
+import {RootState} from "../store";
+import {CoursesState} from "./courses.reducer";
 
-export const getCourses = (state: AppStateType): ICourse[] => state.courses.courses
-export const getCategories = (state: AppStateType): string[] => state.courses.categories
-export const getAddresses = (state: AppStateType): string[] => state.courses.addresses
-export const getPaymentTerms = (state: AppStateType): string[] => state.courses.paymentTerms
+const selectCoursesReducer = (state: RootState): CoursesState => state.courses;
+
+
+export const selectCourse = (id: string) => createSelector(
+    [selectCoursesReducer],
+    (courses) => {
+        for(let course of courses.courses){
+            if(course.id === id){
+                return course
+            }
+        }
+        return null
+    }
+)
+
+export const selectCourses = createSelector(
+    [selectCoursesReducer],
+    (courses) => courses.courses
+);
+
+export const selectCategories = createSelector(
+    [selectCoursesReducer],
+    (courses) => courses.categories
+);
+
+export const selectAddresses = createSelector(
+    [selectCoursesReducer],
+    (courses) => courses.addresses
+);
+
+export const selectPaymentTerms = createSelector(
+    [selectCoursesReducer],
+    (courses) => courses.paymentTerms
+);
