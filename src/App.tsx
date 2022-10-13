@@ -2,13 +2,14 @@ import './App.css';
 import {Route, Routes} from "react-router-dom";
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Navbar from "./components/navbar/Navbar.component";
 import Header from "./components/header/Header.component";
 import {SelectChangeEvent} from "@mui/material/Select";
 import Filter from "./components/filter/filter.component";
 import Courses from "./pages/courses/courses.component";
 import Timetable from "./pages/timetable/timetable.component";
+import {getCourses} from "./utils/firebase/firebase.utils";
 
 
 function App() {
@@ -28,6 +29,10 @@ function App() {
     const handlePaymentTermChange = (event: SelectChangeEvent) => {
         setPaymentTerm(event.target.value);
     };
+
+    useEffect(()=>{
+        getCourses()
+    },[])
 
     return (
         <div className="App">

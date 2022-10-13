@@ -9,7 +9,7 @@ export const courses: ICourse[] = [
         category: 'IT-технологии',
         description: 'Программа общественно-гуманитарного профиля, базовый уровень.',
         imageUrl: 'https://firebasestorage.googleapis.com/v0/b/vetraz-f48ba.appspot.com/o/computer_english.jpg?alt=media&token=ecd73530-c121-44de-8410-2a6863793c25',
-        paymentTerms: 'обучение на платной основе',
+        paymentTerm: 'обучение на платной основе',
         studentsAge: [6, 7, 8, 9, 10],
         teacherName: 'Лагутко Е. А.'
     },
@@ -21,7 +21,7 @@ export const courses: ICourse[] = [
         category: 'IT-технологии',
         description: 'Программа общественно-гуманитарного профиля, базовый уровень.',
         imageUrl: '',
-        paymentTerms: 'обучение на платной основе',
+        paymentTerm: 'обучение на платной основе',
         studentsAge: [10, 11, 12, 13, 14, 15],
         teacherName: ''
     }

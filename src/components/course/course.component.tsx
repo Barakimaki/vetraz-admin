@@ -3,6 +3,11 @@ import {Card, CardActions, CardContent, CardMedia, Typography} from "@mui/materi
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
+import style from "./course.module.scss";
+import DeleteButton from "../deleteTaskButton/DeleteButton";
+import {removeFromCourses} from "../../store/courses/courses.action";
+import {useDispatch, useSelector} from "react-redux";
+import {selectCourses} from "../../store/courses/courses.selectors";
 
 
 type Props = {
@@ -12,8 +17,17 @@ type Props = {
 }
 
 const Course = ({course, setId, handleOpen}:Props) => {
+
+    const courses = useSelector(selectCourses)
+
+    const dispatch = useDispatch()
+
+    const deleteCourse = (id: string): void => {
+        dispatch(removeFromCourses(courses, id))
+    }
+
     return (
-        <Card>
+        <Card sx={{minHeight:460}}>
             <CardMedia
                 component="img"
                 height="140"
@@ -25,7 +39,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
                     {course.courseName}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Контактный телефон {course.contactPhone}
+                    Контактный телефон: {course.contactPhone}
                 </Typography>
                 <Typography variant="body1" color="text.primary">
                     Направление: {course.category}
@@ -34,7 +48,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
                     {course.description}
                 </Typography>
                 <Typography variant="body2" color="error.main">
-                    {course.paymentTerms}
+                    {course.paymentTerm}
                 </Typography>
                 <Typography variant="body1" color="text.primary">
                     {course.teacherName}
@@ -43,7 +57,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
                     Адрес: {course.address}
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions disableSpacing className={style.parentFlexSplit}>
                 <IconButton color='primary'
                             title='Редактировать'
                             onClick={() => {
@@ -52,9 +66,9 @@ const Course = ({course, setId, handleOpen}:Props) => {
                             }}>
                     <EditIcon/>
                 </IconButton>
-                <IconButton color='error' title='Удалить курс' onClick={() => {}}>
-                    <DeleteRoundedIcon/>
-                </IconButton>
+                <div className={style.rightAlignItem}>
+                    <DeleteButton id={course.id} deleteCourse={deleteCourse}/>
+                </div>
             </CardActions>
         </Card>
     );

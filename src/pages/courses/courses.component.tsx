@@ -74,7 +74,7 @@ const Courses = ({category, address, paymentTerm}:Props) => {
                 {courses.filter(course=>{
                 if((course.category === category || !category) &&
                     (course.address === address || !address) &&
-                    (course.paymentTerms === paymentTerm || !paymentTerm)){
+                    (course.paymentTerm === paymentTerm || !paymentTerm)){
                     return true
                 } else {return false}
             }).map(course=><Course key={course.id} course={course} handleOpen={handleOpen} setId={setId}/>)}

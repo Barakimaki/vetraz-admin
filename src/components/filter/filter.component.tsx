@@ -5,6 +5,7 @@ import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import {useSelector} from "react-redux";
 import {selectAddresses, selectCategories, selectPaymentTerms} from "../../store/courses/courses.selectors";
+import SelectItem from "../selectItem/selectItem.component";
 
 type Props = {
     category: string,
@@ -31,52 +32,24 @@ const Filter = ({
 
     return (
         <>
-
-            <FormControl sx={{m: 1, minWidth: 260}} size="small">
-                <InputLabel>Направление</InputLabel>
-                <Select
-                    labelId="Categories"
-                    id="categories"
-                    value={category}
-                    label="Направление"
-                    onChange={handleCategoryChange}
-                >
-                    <MenuItem value="">
-                        <em>Все</em>
-                    </MenuItem>
-                    {categories.map(category => <MenuItem key={category} value={category}>{category}</MenuItem>)}
-                </Select>
-            </FormControl>
-            <FormControl sx={{m: 1, minWidth: 260}} size="small">
-                <InputLabel>Адрес</InputLabel>
-                <Select
-                    labelId="Address"
-                    id="adresses"
-                    value={address}
-                    label="Адрес"
-                    onChange={handleAddressChange}
-                >
-                    <MenuItem value="">
-                        <em>Все</em>
-                    </MenuItem>
-                    {addresses.map(address => <MenuItem key={address} value={address}>{address}</MenuItem>)}
-                </Select>
-            </FormControl>
-            <FormControl sx={{m: 1, minWidth: 260}} size="small">
-                <InputLabel>Условие оплаты</InputLabel>
-                <Select
-                    labelId="PaymentTerms"
-                    id="paymentTerms"
-                    value={paymentTerm}
-                    label="Условие оплаты"
-                    onChange={handlePaymentTermChange}
-                >
-                    <MenuItem value="">
-                        <em>Все</em>
-                    </MenuItem>
-                    {paymentTerms.map(term => <MenuItem key={term} value={term}>{term}</MenuItem>)}
-                </Select>
-            </FormControl>
+            <SelectItem item={category}
+                        items={categories}
+                        name={"Направление"}
+                        handleChange={handleCategoryChange}
+                        size={260}
+            />
+            <SelectItem item={address}
+                        items={addresses}
+                        name={"Адрес"}
+                        handleChange={handleAddressChange}
+                        size={260}
+            />
+            <SelectItem item={paymentTerm}
+                        items={paymentTerms}
+                        name={"Условие оплаты"}
+                        handleChange={handlePaymentTermChange}
+                        size={260}
+            />
         </>
     );
 };
