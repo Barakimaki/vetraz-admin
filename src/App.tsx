@@ -9,10 +9,15 @@ import {SelectChangeEvent} from "@mui/material/Select";
 import Filter from "./components/filter/filter.component";
 import Courses from "./pages/courses/courses.component";
 import Timetable from "./pages/timetable/timetable.component";
-import {getCourses} from "./utils/firebase/firebase.utils";
+import { getCoursesStateAsync} from "./store/courses/courses.action";
+import {useDispatch} from "react-redux";
+import { getCoursesState} from "./utils/firebase/firebase.utils";
+
 
 
 function App() {
+
+    const dispatch = useDispatch()
 
     const [pageTitle, setPageTitle] = useState('Курсы')
 
@@ -31,7 +36,8 @@ function App() {
     };
 
     useEffect(()=>{
-        getCourses()
+        // @ts-ignore
+        dispatch(getCoursesStateAsync())
     },[])
 
     return (

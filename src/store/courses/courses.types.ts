@@ -1,4 +1,5 @@
 export enum COURSES_ACTION_TYPES {
+    SET_STATE = 'course/SET_STATE',
     SET_COURSES = 'course/SET_COURSES'
 }
 

@@ -1,5 +1,7 @@
 import {COURSES_ACTION_TYPES, ICourse} from "./courses.types";
 import {ActionWithPayload, createAction, withMatcher} from "../../utils/reducer/reducer.utils";
+import {getCoursesState, setCoursesDB} from "../../utils/firebase/firebase.utils";
+import {CoursesState} from "./courses.reducer";
 
 const addCourse = (
     courses: ICourse[],
@@ -20,17 +22,23 @@ const editCourses = (
     editedCourse: ICourse
 ): ICourse[] => {
     return courses.map(course => {
-        if(course.id === editedCourse.id){
+        if (course.id === editedCourse.id) {
             return editedCourse
         }
         return course
     })
 }
 
+export type SetCoursesState = ActionWithPayload<COURSES_ACTION_TYPES.SET_STATE, CoursesState>
+
+export const setCoursesState = withMatcher((coursesState: CoursesState): SetCoursesState =>
+    createAction(COURSES_ACTION_TYPES.SET_STATE, coursesState)
+)
+
 export type SetCourses = ActionWithPayload<COURSES_ACTION_TYPES.SET_COURSES, ICourse[]>
 
-export const setCourses = withMatcher((courses:ICourse[]):SetCourses =>
- createAction(COURSES_ACTION_TYPES.SET_COURSES, courses)
+export const setCourses = withMatcher((courses: ICourse[]): SetCourses =>
+    createAction(COURSES_ACTION_TYPES.SET_COURSES, courses)
 )
 
 export const addNewCourse = (
@@ -38,7 +46,7 @@ export const addNewCourse = (
     newCourse: ICourse
 ) => {
     const newCourses = addCourse(courses, newCourse)
-    return setCourses(newCourses)
+    return setCoursesAsync(newCourses)
 }
 
 export const removeFromCourses = (
@@ -46,7 +54,7 @@ export const removeFromCourses = (
     id: string
 ) => {
     const newCourses = removeCourse(courses, id)
-    return setCourses(newCourses)
+    return setCoursesAsync(newCourses)
 }
 
 export const editCourse = (
@@ -54,6 +62,29 @@ export const editCourse = (
     editedCourse: ICourse
 ) => {
     const newCourses = editCourses(courses, editedCourse)
-    return setCourses(newCourses)
+    return setCoursesAsync(newCourses)
 }
 
+
+//Thunk
+
+// @ts-ignore
+export const setCoursesAsync = (courses: ICourse[]) => async (dispatch) => {
+    await setCoursesDB(courses)
+    dispatch(setCourses(courses))
+}
+
+// @ts-ignore
+export const getCoursesStateAsync = () => async (dispatch) => {
+    const coursesState = await getCoursesState()
+
+    let state: CoursesState = {
+        addresses : coursesState[0].addresses,
+        categories : coursesState[1].categories,
+        courses : coursesState[2].courses,
+        paymentTerms : coursesState[3].paymentTerms
+    }
+
+    console.log(state)
+    dispatch(setCoursesState(state))
+}
