@@ -13,6 +13,7 @@ import {SelectChangeEvent} from "@mui/material/Select";
 import SelectItem from "../selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
 import {addNewCourse, editCourse} from "../../store/courses/courses.action";
+import {AppDispatch} from "../../store/store";
 
 type Props = {
     id: string
@@ -22,7 +23,7 @@ type Props = {
 
 const CourseForm = ({closeForm, id, setId}: Props) => {
 
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     let course: ICourse | null = useSelector(selectCourse(id))
     const courses = useSelector(selectCourses)

@@ -8,6 +8,7 @@ import DeleteButton from "../deleteTaskButton/DeleteButton";
 import {removeFromCourses} from "../../store/courses/courses.action";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCourses} from "../../store/courses/courses.selectors";
+import {AppDispatch} from "../../store/store";
 
 
 type Props = {
@@ -20,7 +21,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
 
     const courses = useSelector(selectCourses)
 
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     const deleteCourse = (id: string): void => {
         dispatch(removeFromCourses(courses, id))

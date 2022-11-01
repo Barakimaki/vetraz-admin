@@ -2,6 +2,9 @@ import {COURSES_ACTION_TYPES, ICourse} from "./courses.types";
 import {ActionWithPayload, createAction, withMatcher} from "../../utils/reducer/reducer.utils";
 import {getCoursesState, setCoursesDB} from "../../utils/firebase/firebase.utils";
 import {CoursesState} from "./courses.reducer";
+import {ThunkAction} from 'redux-thunk'
+import {RootState} from "../store";
+import {AnyAction} from "redux";
 
 const addCourse = (
     courses: ICourse[],
@@ -68,14 +71,14 @@ export const editCourse = (
 
 //Thunk
 
-// @ts-ignore
-export const setCoursesAsync = (courses: ICourse[]) => async (dispatch) => {
+type ThunkType = ThunkAction<Promise<void>, RootState, unknown, AnyAction>
+
+export const setCoursesAsync = (courses: ICourse[]):ThunkType => async (dispatch) => {
     await setCoursesDB(courses)
     dispatch(setCourses(courses))
 }
 
-// @ts-ignore
-export const getCoursesStateAsync = () => async (dispatch) => {
+export const getCoursesStateAsync = ():ThunkType => async (dispatch) => {
     const coursesState = await getCoursesState()
 
     let state: CoursesState = {

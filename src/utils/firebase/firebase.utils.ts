@@ -2,13 +2,9 @@ import { initializeApp } from 'firebase/app';
 import {
     getFirestore,
     doc,
-    getDoc,
     setDoc,
     collection,
-    writeBatch,
-    query,
     getDocs,
-    QueryDocumentSnapshot
 } from 'firebase/firestore';
 import {ICourse} from "../../store/courses/courses.types";
 
