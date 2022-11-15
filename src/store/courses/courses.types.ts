@@ -12,7 +12,10 @@ export interface ICourse{
     description: string
     imageUrl: string
     paymentTerm: string
-    studentsAge?: number[]
+    studentsAge?: {
+        from: number,
+        to: number
+    }
     teacherName: string
 }
 

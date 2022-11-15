@@ -3,12 +3,14 @@ import {
     getFirestore,
     doc,
     setDoc,
-    collection,
-    getDocs,
+    getDoc,
+    updateDoc,
+    deleteField
 } from 'firebase/firestore'
 import 'firebase/storage'
 import {ICourse} from "../../store/courses/courses.types"
-import {getStorage} from "firebase/storage";
+import {deleteObject, getStorage, ref} from "firebase/storage";
+import {CoursesState} from "../../store/courses/courses.reducer";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -28,16 +30,53 @@ const db = getFirestore(app)
 export const storage = getStorage(app);
 
 export const getCoursesState = async () => {
-    const coursesRef = collection(db, 'courses')
-    const querySnapshot = await getDocs(coursesRef)
-    const courses = querySnapshot.docs.map(docSnapshot => docSnapshot.data())
-    return courses
+    let coursesState : CoursesState = {
+        courses: [],
+        categories: [],
+        addresses: [],
+        paymentTerms: []
+
+    }
+
+    const coursesRef = doc(db, 'courses', 'courses')
+    const coursesSnap = await getDoc(coursesRef)
+    if(coursesSnap.exists()){
+        let courses = coursesSnap.data()
+        for(let course in courses){
+            coursesState.courses.push(courses[course])
+        }
+
+    }
+    const commonRef = doc(db, 'courses', 'common')
+    const commonSnap = await  getDoc(commonRef)
+    if(commonSnap.exists()){
+        let common = commonSnap.data()
+        coursesState.categories = common.categories
+        coursesState.addresses = common.addresses
+        coursesState.paymentTerms = common.paymentTerms
+    }
+    return coursesState
 }
 
-export const setCoursesDB = async (courses: ICourse[]) => {
-    await setDoc(doc(db, 'courses', 'courses'), {
-        courses
+export const setCourseDoc = async (course: ICourse) => {
+
+    const coursesRef = doc(db, 'courses', 'courses')
+
+    await updateDoc(coursesRef, {
+        [course.id]: course
     })
 }
+
+export const deleteCourse = async (id: string) => {
+    const coursesRef = doc(db, 'courses', 'courses')
+    const imageRef = ref(storage, id)
+
+    await deleteObject(imageRef)
+
+    await updateDoc(coursesRef, {
+        [id]: deleteField()
+    })
+}
+
 
 

@@ -1,6 +1,6 @@
 
 import {AnyAction} from "redux";
-import {setCourses, setCoursesState} from "./courses.action";
+import { setCoursesState} from "./courses.action";
 import {ICourse} from "./courses.types";
 
 export type CoursesState = {
@@ -22,9 +22,6 @@ const coursesReducer = (state = COURSE_INITIAL_STATE,
                         action: AnyAction): CoursesState => {
     if (setCoursesState.match(action)) {
         return {...action.payload}
-    }
-    if (setCourses.match(action)) {
-        return {...state, courses: action.payload}
     }
 
     return state

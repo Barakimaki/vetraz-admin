@@ -2,7 +2,7 @@ import styles from './courses.module.scss'
 import Course from "../../components/course/course.component";
 import React, {useState} from "react";
 import {selectCourses} from "../../store/courses/courses.selectors";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import IconButton from "@mui/material/IconButton";
 import {Backdrop} from "@mui/material";
@@ -31,7 +31,7 @@ const style = {
 };
 
 
-const Courses = ({category, address, paymentTerm}:Props) => {
+const Courses = ({category, address, paymentTerm}: Props) => {
 
     const courses = useSelector(selectCourses) || []
 
@@ -46,7 +46,7 @@ const Courses = ({category, address, paymentTerm}:Props) => {
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 open={open}
-                onClose={()=>{
+                onClose={() => {
                     setId('')
                     handleClose()
                 }}
@@ -64,20 +64,32 @@ const Courses = ({category, address, paymentTerm}:Props) => {
             </Modal>
             <div className={styles.editBar}>
                 <IconButton color="primary" size='large' title='Добавить курс'>
-                    <AddCircleOutlineRoundedIcon onClick={()=>{
+                    <AddCircleOutlineRoundedIcon onClick={() => {
                         setId('')
                         handleOpen()
                     }}/>
                 </IconButton>
             </div>
             <div className={styles.courses}>
-                {courses.filter(course=>{
-                if((course.category === category || !category) &&
-                    (course.address === address || !address) &&
-                    (course.paymentTerm === paymentTerm || !paymentTerm)){
-                    return true
-                } else {return false}
-            }).map(course=><Course key={course.id} course={course} handleOpen={handleOpen} setId={setId}/>)}
+                {courses
+                    .sort((a, b) => {
+                        if (a.courseName < b.courseName) //сортируем строки по возрастанию
+                            return -1
+                        if (a.courseName > b.courseName)
+                            return 1
+                        return 0
+                    })
+                    .filter(course => {
+                        if ((course.category === category || !category) &&
+                            (course.address === address || !address) &&
+                            (course.paymentTerm === paymentTerm || !paymentTerm)) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                    .map(course => <Course key={course.id} course={course} handleOpen={handleOpen} setId={setId}/>)
+                }
             </div>
 
         </div>

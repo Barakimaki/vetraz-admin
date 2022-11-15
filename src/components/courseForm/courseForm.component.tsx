@@ -5,14 +5,14 @@ import {useSelector, useDispatch} from "react-redux";
 import {
     selectAddresses,
     selectCategories,
-    selectCourse, selectCourses,
+    selectCourse,
     selectPaymentTerms
 } from "../../store/courses/courses.selectors";
 import {ICourse} from "../../store/courses/courses.types";
 import {SelectChangeEvent} from "@mui/material/Select";
 import SelectItem from "../selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
-import {addNewCourse, editCourse} from "../../store/courses/courses.action";
+import { updateCourseAsync} from "../../store/courses/courses.action";
 import {AppDispatch} from "../../store/store";
 import {storage} from "../../utils/firebase/firebase.utils";
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -27,7 +27,6 @@ const CourseForm = ({closeForm, id}: Props) => {
     const dispatch: AppDispatch = useDispatch()
 
     let course: ICourse | null = useSelector(selectCourse(id))
-    const courses = useSelector(selectCourses)
     const categories = useSelector(selectCategories) || []
     const paymentTerms = useSelector(selectPaymentTerms) || []
     const addresses = useSelector(selectAddresses) || []
@@ -46,7 +45,6 @@ const CourseForm = ({closeForm, id}: Props) => {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            console.log(e.target.files[0])
             setImageFile(e.target.files[0])
         }
 
@@ -82,12 +80,11 @@ const CourseForm = ({closeForm, id}: Props) => {
             description,
             imageUrl: url || course?.imageUrl || '',
             paymentTerm,
-            studentsAge: course?.studentsAge || [],
+            studentsAge: course?.studentsAge || { from: 0, to: 0},
             teacherName
         }
-        course
-            ? dispatch(editCourse(courses, newCourseData))
-            : dispatch(addNewCourse(courses, newCourseData))
+
+        dispatch(updateCourseAsync(newCourseData))
 
         setCourseName('')
         setCategory('')

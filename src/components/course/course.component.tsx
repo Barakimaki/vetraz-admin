@@ -4,9 +4,8 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
 import style from "./course.module.scss";
 import DeleteButton from "../deleteTaskButton/DeleteButton";
-import { removeFromCoursesAsync} from "../../store/courses/courses.action";
-import {useDispatch, useSelector} from "react-redux";
-import {selectCourses} from "../../store/courses/courses.selectors";
+import {deleteCourseAsync} from "../../store/courses/courses.action";
+import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store/store";
 
 
@@ -18,12 +17,10 @@ type Props = {
 
 const Course = ({course, setId, handleOpen}:Props) => {
 
-    const courses = useSelector(selectCourses)
-
     const dispatch: AppDispatch = useDispatch()
 
     const deleteCourse = (id: string): void => {
-        dispatch(removeFromCoursesAsync(courses, id, course.imageUrl))
+        dispatch(deleteCourseAsync(id))
     }
 
     return (
