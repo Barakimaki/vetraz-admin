@@ -37,6 +37,7 @@ const CourseForm = ({closeForm, id}: Props) => {
     let [contactPhone, setContactPhone] = useState(course?.contactPhone || '')
     let [description, setDescription] = useState(course?.description || '')
     let [paymentTerm, setPaymentTerm] = useState(course?.paymentTerm || '')
+    let [studentsAge, setStudentsAge] = useState(course?.studentsAge || { from: null, to: null})
     let [teacherName, setTeacherName] = useState(course?.teacherName || '')
     let [address, setAddress] = useState(course?.address || '')
     let [courseId, setCourseId] = useState(course?.id || uuidv4())
@@ -80,7 +81,7 @@ const CourseForm = ({closeForm, id}: Props) => {
             description,
             imageUrl: url || course?.imageUrl || '',
             paymentTerm,
-            studentsAge: course?.studentsAge || { from: 0, to: 0},
+            studentsAge,
             teacherName
         }
 
@@ -193,6 +194,17 @@ const CourseForm = ({closeForm, id}: Props) => {
                 <Input placeholder="Руководитель" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setTeacherName(e.target.value)
                 }} defaultValue={teacherName}/>
+            </FormControl>
+            <Typography gutterBottom variant="h5" component="div">
+                Возраст обучающихся
+            </Typography>
+            <FormControl variant="standard" sx={{m: 1, width: 40} }>
+                <Input type='number' placeholder="с" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setStudentsAge({...studentsAge, from: Number(e.target.value)})
+                }} defaultValue={studentsAge.from}/>
+                <Input type='number' placeholder="по" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setStudentsAge({...studentsAge, to: Number(e.target.value)})
+                }} defaultValue={studentsAge.to}/>
             </FormControl>
             <Typography gutterBottom variant="h5" component="div">
                 Адрес

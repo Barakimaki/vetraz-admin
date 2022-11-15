@@ -30,8 +30,8 @@ export const updateCourseAsync = (course: ICourse): ThunkType => async (dispatch
     dispatch(setCoursesState(coursesState))
 }
 
-export const deleteCourseAsync = (id: string): ThunkType => async (dispatch) => {
-    await deleteCourse(id)
+export const deleteCourseAsync = (id: string, imageUrl: string): ThunkType => async (dispatch) => {
+    await deleteCourse(id, imageUrl)
     const coursesState = await getCoursesState()
     dispatch(setCoursesState(coursesState))
 }

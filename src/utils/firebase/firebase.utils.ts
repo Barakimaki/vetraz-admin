@@ -30,7 +30,7 @@ const db = getFirestore(app)
 export const storage = getStorage(app);
 
 export const getCoursesState = async () => {
-    let coursesState : CoursesState = {
+    let coursesState: CoursesState = {
         courses: [],
         categories: [],
         addresses: [],
@@ -40,16 +40,16 @@ export const getCoursesState = async () => {
 
     const coursesRef = doc(db, 'courses', 'courses')
     const coursesSnap = await getDoc(coursesRef)
-    if(coursesSnap.exists()){
+    if (coursesSnap.exists()) {
         let courses = coursesSnap.data()
-        for(let course in courses){
+        for (let course in courses) {
             coursesState.courses.push(courses[course])
         }
 
     }
     const commonRef = doc(db, 'courses', 'common')
-    const commonSnap = await  getDoc(commonRef)
-    if(commonSnap.exists()){
+    const commonSnap = await getDoc(commonRef)
+    if (commonSnap.exists()) {
         let common = commonSnap.data()
         coursesState.categories = common.categories
         coursesState.addresses = common.addresses
@@ -67,12 +67,13 @@ export const setCourseDoc = async (course: ICourse) => {
     })
 }
 
-export const deleteCourse = async (id: string) => {
+export const deleteCourse = async (id: string, imageUrl: string) => {
     const coursesRef = doc(db, 'courses', 'courses')
-    const imageRef = ref(storage, id)
 
-    await deleteObject(imageRef)
-
+    if (imageUrl) {
+        const imageRef = ref(storage, id)
+        await deleteObject(imageRef)
+    }
     await updateDoc(coursesRef, {
         [id]: deleteField()
     })

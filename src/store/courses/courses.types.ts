@@ -1,6 +1,5 @@
 export enum COURSES_ACTION_TYPES {
-    SET_STATE = 'course/SET_STATE',
-    SET_COURSES = 'course/SET_COURSES'
+    SET_STATE = 'course/SET_STATE'
 }
 
 export interface ICourse{
@@ -13,8 +12,8 @@ export interface ICourse{
     imageUrl: string
     paymentTerm: string
     studentsAge?: {
-        from: number,
-        to: number
+        from: number | null,
+        to: number | null
     }
     teacherName: string
 }

@@ -20,7 +20,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
     const dispatch: AppDispatch = useDispatch()
 
     const deleteCourse = (id: string): void => {
-        dispatch(deleteCourseAsync(id))
+        dispatch(deleteCourseAsync(id, course.imageUrl))
     }
 
     return (
@@ -40,6 +40,9 @@ const Course = ({course, setId, handleOpen}:Props) => {
                 </Typography>
                 <Typography variant="body1" color="text.primary">
                     Направление: {course.category}
+                </Typography>
+                <Typography variant="body2" color="text.primary">
+                    Возраст обучающихся: {course.studentsAge?.from}-{course.studentsAge?.to}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     {course.description}
