@@ -1,11 +1,10 @@
 import {ICourse} from "../../store/courses/courses.types";
 import {Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
 import style from "./course.module.scss";
 import DeleteButton from "../deleteTaskButton/DeleteButton";
-import {removeFromCourses} from "../../store/courses/courses.action";
+import { removeFromCoursesAsync} from "../../store/courses/courses.action";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCourses} from "../../store/courses/courses.selectors";
 import {AppDispatch} from "../../store/store";
@@ -24,7 +23,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
     const dispatch: AppDispatch = useDispatch()
 
     const deleteCourse = (id: string): void => {
-        dispatch(removeFromCourses(courses, id))
+        dispatch(removeFromCoursesAsync(courses, id, course.imageUrl))
     }
 
     return (

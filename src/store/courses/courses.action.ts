@@ -1,10 +1,11 @@
 import {COURSES_ACTION_TYPES, ICourse} from "./courses.types";
 import {ActionWithPayload, createAction, withMatcher} from "../../utils/reducer/reducer.utils";
-import {getCoursesState, setCoursesDB} from "../../utils/firebase/firebase.utils";
+import {getCoursesState, setCoursesDB, storage} from "../../utils/firebase/firebase.utils";
 import {CoursesState} from "./courses.reducer";
 import {ThunkAction} from 'redux-thunk'
 import {RootState} from "../store";
 import {AnyAction} from "redux";
+import {ref, deleteObject} from "firebase/storage";
 
 const addCourse = (
     courses: ICourse[],
@@ -52,14 +53,6 @@ export const addNewCourse = (
     return setCoursesAsync(newCourses)
 }
 
-export const removeFromCourses = (
-    courses: ICourse[],
-    id: string
-) => {
-    const newCourses = removeCourse(courses, id)
-    return setCoursesAsync(newCourses)
-}
-
 export const editCourse = (
     courses: ICourse[],
     editedCourse: ICourse
@@ -73,21 +66,38 @@ export const editCourse = (
 
 type ThunkType = ThunkAction<Promise<void>, RootState, unknown, AnyAction>
 
-export const setCoursesAsync = (courses: ICourse[]):ThunkType => async (dispatch) => {
+export const setCoursesAsync = (courses: ICourse[]): ThunkType => async (dispatch) => {
     await setCoursesDB(courses)
     dispatch(setCourses(courses))
 }
 
-export const getCoursesStateAsync = ():ThunkType => async (dispatch) => {
+export const getCoursesStateAsync = (): ThunkType => async (dispatch) => {
     const coursesState = await getCoursesState()
 
     let state: CoursesState = {
-        addresses : coursesState[0].addresses,
-        categories : coursesState[1].categories,
-        courses : coursesState[2].courses,
-        paymentTerms : coursesState[3].paymentTerms
+        addresses: coursesState[0].addresses,
+        categories: coursesState[1].categories,
+        courses: coursesState[2].courses,
+        paymentTerms: coursesState[3].paymentTerms
     }
-
-    console.log(state)
     dispatch(setCoursesState(state))
+}
+
+export const removeFromCoursesAsync = (
+    courses: ICourse[],
+    id: string,
+    imageUrl: string
+): ThunkType => async (dispatch) => {
+    if (imageUrl) {
+        const imageRef = ref(storage, id)
+        return deleteObject(imageRef).then(() => {
+            const newCourses = removeCourse(courses, id)
+            dispatch(setCoursesAsync(newCourses))
+        }).catch((error) => {
+            console.log(error.message)
+        });
+    } else {
+        const newCourses = removeCourse(courses, id)
+        dispatch(setCoursesAsync(newCourses))
+    }
 }

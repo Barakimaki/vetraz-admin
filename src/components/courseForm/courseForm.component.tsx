@@ -14,14 +14,15 @@ import SelectItem from "../selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
 import {addNewCourse, editCourse} from "../../store/courses/courses.action";
 import {AppDispatch} from "../../store/store";
+import {storage} from "../../utils/firebase/firebase.utils";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 type Props = {
     id: string
-    setId: (id: string) => void
     closeForm: () => void
 }
 
-const CourseForm = ({closeForm, id, setId}: Props) => {
+const CourseForm = ({closeForm, id}: Props) => {
 
     const dispatch: AppDispatch = useDispatch()
 
@@ -39,6 +40,89 @@ const CourseForm = ({closeForm, id, setId}: Props) => {
     let [paymentTerm, setPaymentTerm] = useState(course?.paymentTerm || '')
     let [teacherName, setTeacherName] = useState(course?.teacherName || '')
     let [address, setAddress] = useState(course?.address || '')
+    let [courseId, setCourseId] = useState(course?.id || uuidv4())
+
+    let [imageFile, setImageFile] = useState(null as (null | File))
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            console.log(e.target.files[0])
+            setImageFile(e.target.files[0])
+        }
+
+    }
+
+    const handleFileSubmit = (): Promise<string | void> => {
+        const imageRef = ref(storage, courseId)
+        if (imageFile) {
+            return uploadBytes(imageRef, imageFile)
+                .then(() => {
+                    return getDownloadURL(imageRef)
+                        .then((url) => {
+                            return url
+                        })
+                        .catch((error) => {
+                            console.log(error.message, "error getting the image url");
+                        })
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
+        }
+        return Promise.resolve('')
+    };
+
+    const submitForm = (url?: string) => {
+        let newCourseData: ICourse = {
+            id: courseId,
+            address,
+            contactPhone,
+            courseName,
+            category,
+            description,
+            imageUrl: url || course?.imageUrl || '',
+            paymentTerm,
+            studentsAge: course?.studentsAge || [],
+            teacherName
+        }
+        course
+            ? dispatch(editCourse(courses, newCourseData))
+            : dispatch(addNewCourse(courses, newCourseData))
+
+        setCourseName('')
+        setCategory('')
+        setContactPhone('')
+        setDescription('')
+        setPaymentTerm('')
+        setTeacherName('')
+        setAddress('')
+        setImageFile(null)
+
+        closeForm()
+    }
+
+    const handleSubmitForm = () => {
+        if (courseName.length > 0) {
+            if (imageFile) {
+                handleFileSubmit()
+                    .then(url => {
+                        if (url) {
+                            submitForm(url)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            } else {
+                submitForm()
+            }
+        } else {
+
+            setInputError(true)
+        }
+
+    }
+
 
     return (
         <form action="">
@@ -52,6 +136,21 @@ const CourseForm = ({closeForm, id, setId}: Props) => {
                 }} defaultValue={courseName}/>
                 {inputError && <FormHelperText id="component-error-text">Название не может быть пустым</FormHelperText>}
             </FormControl>
+            <Typography gutterBottom variant="h5" component="div">
+                Изображение
+            </Typography>
+            <Button
+                variant="contained"
+                component="label"
+            >
+                Добавить изображение
+                <input type="file" hidden onChange={handleFileChange}/>
+            </Button>
+            {
+                imageFile ? <Typography gutterBottom variant="caption" component="div">
+                    {imageFile.name}
+                </Typography> : ''
+            }
             <Typography gutterBottom variant="h5" component="div">
                 Контактный телефон
             </Typography>
@@ -107,37 +206,9 @@ const CourseForm = ({closeForm, id, setId}: Props) => {
                         handleChange={(event: SelectChangeEvent) => setAddress(event.target.value)}
                         size={260}/>
             <div>
-                <Button variant="contained" onClick={()=>{
-                    let newCourseData: ICourse = {
-                        id: course?.id || uuidv4(),
-                        address,
-                        contactPhone,
-                        courseName,
-                        category,
-                        description,
-                        imageUrl: course?.imageUrl || '',
-                        paymentTerm,
-                        studentsAge: course?.studentsAge || [],
-                        teacherName
-                    }
-                    if(courseName.length > 0){
-                        course
-                            ? dispatch(editCourse(courses, newCourseData))
-                            : dispatch(addNewCourse(courses, newCourseData))
-
-                        setCourseName('')
-                        setCategory('')
-                        setContactPhone('')
-                        setDescription('')
-                        setPaymentTerm('')
-                        setTeacherName('')
-                        setAddress('')
-
-                        closeForm()
-                    } else {
-                        setInputError(true)
-                    }
-                }}>{course? 'Редактировать' : 'Добавить'}</Button>
+                <Button variant="contained" onClick={handleSubmitForm}>
+                    {course ? 'Редактировать' : 'Добавить'}
+                </Button>
             </div>
 
         </form>

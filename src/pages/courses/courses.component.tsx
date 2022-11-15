@@ -58,7 +58,7 @@ const Courses = ({category, address, paymentTerm}:Props) => {
             >
                 <Fade in={open}>
                     <Box sx={style}>
-                        <CourseForm closeForm={handleClose} id={id} setId={setId}/>
+                        <CourseForm closeForm={handleClose} id={id}/>
                     </Box>
                 </Fade>
             </Modal>
