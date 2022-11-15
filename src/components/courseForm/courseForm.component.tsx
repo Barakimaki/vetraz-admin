@@ -12,7 +12,7 @@ import {ICourse} from "../../store/courses/courses.types";
 import {SelectChangeEvent} from "@mui/material/Select";
 import SelectItem from "../selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
-import { updateCourseAsync} from "../../store/courses/courses.action";
+import {addCourseAsync, editCourseAsync} from "../../store/courses/courses.action";
 import {AppDispatch} from "../../store/store";
 import {storage} from "../../utils/firebase/firebase.utils";
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -84,8 +84,9 @@ const CourseForm = ({closeForm, id}: Props) => {
             studentsAge,
             teacherName
         }
-
-        dispatch(updateCourseAsync(newCourseData))
+        course
+            ? dispatch(editCourseAsync(newCourseData))
+            : dispatch(addCourseAsync(newCourseData))
 
         setCourseName('')
         setCategory('')
@@ -202,6 +203,8 @@ const CourseForm = ({closeForm, id}: Props) => {
                 <Input type='number' placeholder="с" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setStudentsAge({...studentsAge, from: Number(e.target.value)})
                 }} defaultValue={studentsAge.from}/>
+            </FormControl>
+            <FormControl variant="standard" sx={{m: 1, width: 40} }>
                 <Input type='number' placeholder="по" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setStudentsAge({...studentsAge, to: Number(e.target.value)})
                 }} defaultValue={studentsAge.to}/>

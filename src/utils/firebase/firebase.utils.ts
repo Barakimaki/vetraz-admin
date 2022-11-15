@@ -15,7 +15,7 @@ import {CoursesState} from "../../store/courses/courses.reducer";
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId:/* process.env.REACT_APP_FIREBASE_PROJECT_ID*/ "vetraz-f48ba",
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
@@ -62,21 +62,32 @@ export const setCourseDoc = async (course: ICourse) => {
 
     const coursesRef = doc(db, 'courses', 'courses')
 
-    await updateDoc(coursesRef, {
-        [course.id]: course
-    })
+    try {
+        await updateDoc(coursesRef, {
+            [course.id]: course
+        })
+        return true
+    }catch (e){
+        return false
+    }
 }
 
-export const deleteCourse = async (id: string, imageUrl: string) => {
+export const removeCourse = async (id: string, imageUrl: string) => {
     const coursesRef = doc(db, 'courses', 'courses')
 
-    if (imageUrl) {
-        const imageRef = ref(storage, id)
-        await deleteObject(imageRef)
+    try{
+        if (imageUrl) {
+            const imageRef = ref(storage, id)
+            await deleteObject(imageRef)
+        }
+        await updateDoc(coursesRef, {
+            [id]: deleteField()
+        })
+        return true
+    }catch (e){
+        return false
     }
-    await updateDoc(coursesRef, {
-        [id]: deleteField()
-    })
+
 }
 
 

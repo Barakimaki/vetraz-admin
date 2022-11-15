@@ -1,5 +1,8 @@
 export enum COURSES_ACTION_TYPES {
-    SET_STATE = 'course/SET_STATE'
+    SET_STATE = 'course/SET_STATE',
+    ADD_COURSE = 'course/ADD_COURSE',
+    EDIT_COURSE = 'course/EDIT_COURSE',
+    DELETE_COURSE = 'course/DELETE_COURSE'
 }
 
 export interface ICourse{

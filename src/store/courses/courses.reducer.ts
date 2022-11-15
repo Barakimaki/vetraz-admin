@@ -1,6 +1,5 @@
-
 import {AnyAction} from "redux";
-import { setCoursesState} from "./courses.action";
+import {addCourse, deleteCourse, editCourse, setCoursesState} from "./courses.action";
 import {ICourse} from "./courses.types";
 
 export type CoursesState = {
@@ -22,6 +21,27 @@ const coursesReducer = (state = COURSE_INITIAL_STATE,
                         action: AnyAction): CoursesState => {
     if (setCoursesState.match(action)) {
         return {...action.payload}
+    }
+    if (addCourse.match(action)) {
+        return {...state, courses: [...state.courses, action.payload]}
+    }
+    if (editCourse.match(action)) {
+        const newCourses = [...state.courses].map(course => {
+            if (course.id === action.payload.id) {
+                return action.payload
+            } else {
+                return course
+            }
+        })
+        return {
+            ...state, courses: newCourses
+        }
+    }
+    if(deleteCourse.match(action)){
+        const newCourses = [...state.courses].filter(course => course.id !== action.payload)
+        return {
+            ...state, courses: newCourses
+        }
     }
 
     return state

@@ -11,13 +11,13 @@ import Courses from "./pages/courses/courses.component";
 import Timetable from "./pages/timetable/timetable.component";
 import { getCoursesStateAsync} from "./store/courses/courses.action";
 import {useDispatch} from "react-redux";
-import { getCoursesState} from "./utils/firebase/firebase.utils";
+import {AppDispatch} from "./store/store";
 
 
 
 function App() {
 
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     const [pageTitle, setPageTitle] = useState('Курсы')
 
@@ -36,7 +36,6 @@ function App() {
     };
 
     useEffect(()=>{
-        // @ts-ignore
         dispatch(getCoursesStateAsync())
     },[])
 
