@@ -1,11 +1,10 @@
 import React from 'react';
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select, {SelectChangeEvent} from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import  {SelectChangeEvent} from "@mui/material/Select";
+
 import {useSelector} from "react-redux";
 import {selectAddresses, selectCategories, selectPaymentTerms} from "../../store/courses/courses.selectors";
 import SelectItem from "../selectItem/selectItem.component";
+import {Common} from "../../store/courses/courses.types";
 
 type Props = {
     category: string,
@@ -29,6 +28,13 @@ const Filter = ({
     const addresses = useSelector(selectAddresses) || []
     const paymentTerms = useSelector(selectPaymentTerms) || []
 
+    const common: Common = {
+        categories,
+        addresses,
+        paymentTerms
+    }
+
+
 
     return (
         <>
@@ -36,19 +42,22 @@ const Filter = ({
                         items={categories}
                         name={"Направление"}
                         handleChange={handleCategoryChange}
-                        size={260}
+                        size={320}
+                        common={common}
             />
             <SelectItem item={address}
                         items={addresses}
                         name={"Адрес"}
                         handleChange={handleAddressChange}
-                        size={260}
+                        size={320}
+                        common={common}
             />
             <SelectItem item={paymentTerm}
                         items={paymentTerms}
                         name={"Условие оплаты"}
                         handleChange={handlePaymentTermChange}
-                        size={260}
+                        size={320}
+                        common={common}
             />
         </>
     );

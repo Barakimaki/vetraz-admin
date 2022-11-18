@@ -2,7 +2,8 @@ export enum COURSES_ACTION_TYPES {
     SET_STATE = 'course/SET_STATE',
     ADD_COURSE = 'course/ADD_COURSE',
     EDIT_COURSE = 'course/EDIT_COURSE',
-    DELETE_COURSE = 'course/DELETE_COURSE'
+    DELETE_COURSE = 'course/DELETE_COURSE',
+    UPDATE_COMMON = 'course/UPDATE_COMMON'
 }
 
 export interface ICourse{
@@ -19,5 +20,11 @@ export interface ICourse{
         to: number | null
     }
     teacherName: string
+}
+
+export type Common = {
+    categories: string[],
+    addresses: string[],
+    paymentTerms: string[]
 }
 

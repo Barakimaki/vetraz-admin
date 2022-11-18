@@ -8,7 +8,7 @@ import {
     selectCourse,
     selectPaymentTerms
 } from "../../store/courses/courses.selectors";
-import {ICourse} from "../../store/courses/courses.types";
+import {Common, ICourse} from "../../store/courses/courses.types";
 import {SelectChangeEvent} from "@mui/material/Select";
 import SelectItem from "../selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
@@ -24,12 +24,20 @@ type Props = {
 
 const CourseForm = ({closeForm, id}: Props) => {
 
+
+
     const dispatch: AppDispatch = useDispatch()
 
     let course: ICourse | null = useSelector(selectCourse(id))
+
     const categories = useSelector(selectCategories) || []
     const paymentTerms = useSelector(selectPaymentTerms) || []
     const addresses = useSelector(selectAddresses) || []
+    const common: Common = {
+        categories,
+        addresses,
+        paymentTerms
+    }
 
     let [inputError, setInputError] = useState(false)
     let [courseName, setCourseName] = useState(course?.courseName || '')
@@ -165,7 +173,10 @@ const CourseForm = ({closeForm, id}: Props) => {
                         items={categories}
                         name={'Направление'}
                         handleChange={(event: SelectChangeEvent) => setCategory(event.target.value)}
-                        size={260}/>
+                        size={320}
+                        common={common}
+            />
+
             <Typography gutterBottom variant="h5" component="div">
                 Описание
             </Typography>
@@ -187,7 +198,9 @@ const CourseForm = ({closeForm, id}: Props) => {
                         items={paymentTerms}
                         name={'Условие оплаты'}
                         handleChange={(event: SelectChangeEvent) => setPaymentTerm(event.target.value)}
-                        size={260}/>
+                        size={320}
+                        common={common}
+            />
             <Typography gutterBottom variant="h5" component="div">
                 Руководитель
             </Typography>
@@ -216,7 +229,9 @@ const CourseForm = ({closeForm, id}: Props) => {
                         items={addresses}
                         name={'Адрес'}
                         handleChange={(event: SelectChangeEvent) => setAddress(event.target.value)}
-                        size={260}/>
+                        size={320}
+                        common={common}
+            />
             <div>
                 <Button variant="contained" onClick={handleSubmitForm}>
                     {course ? 'Редактировать' : 'Добавить'}

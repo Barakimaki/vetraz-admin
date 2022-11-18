@@ -8,9 +8,10 @@ import Modal from "@mui/material/Modal";
 import {Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
+
 type Props = {
     id: string
-    deleteCourse: (id: string) => void
+    handleDelete: (id: string) => void
 }
 
 const style = {
@@ -25,7 +26,7 @@ const style = {
     p: 4,
 };
 
-const DeleteButton = ({id, deleteCourse}: Props) => {
+const DeleteButton = ({id, handleDelete}: Props) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -33,7 +34,7 @@ const DeleteButton = ({id, deleteCourse}: Props) => {
 
     return (
         <div>
-            <IconButton color='error' title='Удалить курс' onClick={() => handleOpen()}>
+            <IconButton color='error' title='Удалить' onClick={() => handleOpen()}>
                 <DeleteRoundedIcon/>
             </IconButton>
             <Modal
@@ -50,9 +51,9 @@ const DeleteButton = ({id, deleteCourse}: Props) => {
                 <Fade in={open}>
                     <Box sx={style}>
                         <Typography gutterBottom variant="h5" component="div">
-                            Вы уверены, что хотите удалить курс?
+                            Вы уверены, что хотите удалить?
                         </Typography>
-                        <Button onClick={()=>deleteCourse(id)}>Да</Button>
+                        <Button onClick={()=>handleDelete(id)}>Да</Button>
                         <Button onClick={()=> handleClose()}>Нет</Button>
                     </Box>
                 </Fade>

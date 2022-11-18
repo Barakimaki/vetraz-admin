@@ -1,5 +1,5 @@
 import {AnyAction} from "redux";
-import {addCourse, deleteCourse, editCourse, setCoursesState} from "./courses.action";
+import {addCourse, deleteCourse, editCourse, setCoursesState, updateCommon} from "./courses.action";
 import {ICourse} from "./courses.types";
 
 export type CoursesState = {
@@ -35,6 +35,14 @@ const coursesReducer = (state = COURSE_INITIAL_STATE,
         })
         return {
             ...state, courses: newCourses
+        }
+    }
+    if(updateCommon.match(action)){
+        return {
+            ...state,
+            addresses: action.payload.addresses,
+            categories: action.payload.categories,
+            paymentTerms: action.payload.paymentTerms
         }
     }
     if(deleteCourse.match(action)){

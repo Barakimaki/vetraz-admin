@@ -67,7 +67,7 @@ const Course = ({course, setId, handleOpen}:Props) => {
                     <EditIcon/>
                 </IconButton>
                 <div className={style.rightAlignItem}>
-                    <DeleteButton id={course.id} deleteCourse={deleteCourse}/>
+                    <DeleteButton id={course.id} handleDelete={deleteCourse}/>
                 </div>
             </CardActions>
         </Card>

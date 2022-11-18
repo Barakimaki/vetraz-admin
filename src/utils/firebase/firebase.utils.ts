@@ -8,7 +8,7 @@ import {
     deleteField
 } from 'firebase/firestore'
 import 'firebase/storage'
-import {ICourse} from "../../store/courses/courses.types"
+import {Common, ICourse} from "../../store/courses/courses.types"
 import {deleteObject, getStorage, ref} from "firebase/storage";
 import {CoursesState} from "../../store/courses/courses.reducer";
 
@@ -58,36 +58,31 @@ export const getCoursesState = async () => {
     return coursesState
 }
 
+export  const setCommon = async (common: Common) => {
+    const commonRef = doc(db, 'courses', 'common')
+
+    await updateDoc(commonRef, common)
+}
+
 export const setCourseDoc = async (course: ICourse) => {
 
     const coursesRef = doc(db, 'courses', 'courses')
 
-    try {
-        await updateDoc(coursesRef, {
-            [course.id]: course
-        })
-        return true
-    }catch (e){
-        return false
-    }
+    await updateDoc(coursesRef, {
+        [course.id]: course
+    })
 }
 
 export const removeCourse = async (id: string, imageUrl: string) => {
     const coursesRef = doc(db, 'courses', 'courses')
 
-    try{
-        if (imageUrl) {
-            const imageRef = ref(storage, id)
-            await deleteObject(imageRef)
-        }
-        await updateDoc(coursesRef, {
-            [id]: deleteField()
-        })
-        return true
-    }catch (e){
-        return false
+    if (imageUrl) {
+        const imageRef = ref(storage, id)
+        await deleteObject(imageRef)
     }
-
+    await updateDoc(coursesRef, {
+        [id]: deleteField()
+    })
 }
 
 

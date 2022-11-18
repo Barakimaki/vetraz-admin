@@ -1,6 +1,6 @@
-import {COURSES_ACTION_TYPES, ICourse} from "./courses.types";
+import {Common, COURSES_ACTION_TYPES, ICourse} from "./courses.types";
 import {ActionWithPayload, createAction, withMatcher} from "../../utils/reducer/reducer.utils";
-import {removeCourse, getCoursesState, setCourseDoc} from "../../utils/firebase/firebase.utils";
+import {removeCourse, getCoursesState, setCourseDoc, setCommon} from "../../utils/firebase/firebase.utils";
 import {CoursesState} from "./courses.reducer";
 import {ThunkAction} from 'redux-thunk'
 import {RootState} from "../store";
@@ -31,6 +31,11 @@ export const deleteCourse = withMatcher((id: string): DeleteCourse =>
     createAction(COURSES_ACTION_TYPES.DELETE_COURSE, id)
 )
 
+export type UpdateCommon = ActionWithPayload<COURSES_ACTION_TYPES.UPDATE_COMMON, Common>
+
+export const updateCommon = withMatcher((common: Common): UpdateCommon =>
+    createAction(COURSES_ACTION_TYPES.UPDATE_COMMON, common)
+)
 
 
 
@@ -39,19 +44,24 @@ export const deleteCourse = withMatcher((id: string): DeleteCourse =>
 type ThunkType = ThunkAction<Promise<void>, RootState, unknown, AnyAction>
 
 export const addCourseAsync = (course: ICourse): ThunkType => async (dispatch) => {
-    const res = await setCourseDoc(course)
-    res && dispatch(addCourse(course))
+    await setCourseDoc(course)
+    dispatch(addCourse(course))
 
+}
+
+export const updateCommonAsync = (common: Common): ThunkType => async (dispatch) => {
+    await setCommon(common)
+    dispatch(updateCommon(common))
 }
 
 export const editCourseAsync = (course: ICourse): ThunkType => async (dispatch) => {
-    const res = await setCourseDoc(course)
-    res && dispatch(editCourse(course))
+    await setCourseDoc(course)
+    dispatch(editCourse(course))
 }
 
 export const deleteCourseAsync = (id: string, imageUrl: string): ThunkType => async (dispatch) => {
-    const res = await removeCourse(id, imageUrl)
-    res && dispatch(deleteCourse(id))
+    await removeCourse(id, imageUrl)
+    dispatch(deleteCourse(id))
 }
 
 export const getCoursesStateAsync = (): ThunkType => async (dispatch) => {
