@@ -3,23 +3,15 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-interface Props {
-    pageTitle: string
-}
-
-const Header = ({pageTitle}: Props) => {
+const Header = () => {
     return (
         <div>
             <CssBaseline/>
             <AppBar
-                position="fixed"
-                sx={{
-                    width: {sm: `calc(100% - 240px)`},
-                }}
             >
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div">
-                        {pageTitle}
+                        Vetraz
                     </Typography>
                 </Toolbar>
             </AppBar>

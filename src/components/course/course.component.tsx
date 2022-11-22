@@ -7,20 +7,21 @@ import DeleteButton from "../deleteTaskButton/DeleteButton";
 import {deleteCourseAsync} from "../../store/courses/courses.action";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store/store";
+import {useNavigate} from "react-router-dom";
 
 
 type Props = {
     course: ICourse
-    setId: (id: string) => void
-    handleOpen: () => void
 }
 
-const Course = ({course, setId, handleOpen}:Props) => {
+const Course = ({course}:Props) => {
+
+    const navigate = useNavigate()
 
     const dispatch: AppDispatch = useDispatch()
 
-    const deleteCourse = (id: string): void => {
-        dispatch(deleteCourseAsync(id, course.imageUrl))
+    const deleteCourse = (course: ICourse): void => {
+        dispatch(deleteCourseAsync(course))
     }
 
     return (
@@ -61,13 +62,12 @@ const Course = ({course, setId, handleOpen}:Props) => {
                 <IconButton color='primary'
                             title='Редактировать'
                             onClick={() => {
-                                setId(course.id)
-                                handleOpen()
+                                navigate(`/edit/${course.id}`)
                             }}>
                     <EditIcon/>
                 </IconButton>
                 <div className={style.rightAlignItem}>
-                    <DeleteButton id={course.id} handleDelete={deleteCourse}/>
+                    <DeleteButton course={course} handleDelete={deleteCourse}/>
                 </div>
             </CardActions>
         </Card>

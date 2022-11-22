@@ -7,11 +7,12 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import {Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import {ICourse} from "../../store/courses/courses.types";
 
 
 type Props = {
-    id: string
-    handleDelete: (id: string) => void
+    course: ICourse
+    handleDelete: (course: ICourse) => void
 }
 
 const style = {
@@ -26,7 +27,7 @@ const style = {
     p: 4,
 };
 
-const DeleteButton = ({id, handleDelete}: Props) => {
+const DeleteButton = ({course, handleDelete}: Props) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -53,7 +54,7 @@ const DeleteButton = ({id, handleDelete}: Props) => {
                         <Typography gutterBottom variant="h5" component="div">
                             Вы уверены, что хотите удалить?
                         </Typography>
-                        <Button onClick={()=>handleDelete(id)}>Да</Button>
+                        <Button onClick={()=>handleDelete(course)}>Да</Button>
                         <Button onClick={()=> handleClose()}>Нет</Button>
                     </Box>
                 </Fade>

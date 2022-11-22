@@ -2,14 +2,14 @@ import {initializeApp} from 'firebase/app'
 import {
     getFirestore,
     doc,
-    setDoc,
     getDoc,
     updateDoc,
-    deleteField
+    arrayUnion,
+    arrayRemove
 } from 'firebase/firestore'
 import 'firebase/storage'
 import {Common, ICourse} from "../../store/courses/courses.types"
-import {deleteObject, getStorage, ref} from "firebase/storage";
+import {deleteObject, getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
 import {CoursesState} from "../../store/courses/courses.reducer";
 
 const firebaseConfig = {
@@ -41,11 +41,7 @@ export const getCoursesState = async () => {
     const coursesRef = doc(db, 'courses', 'courses')
     const coursesSnap = await getDoc(coursesRef)
     if (coursesSnap.exists()) {
-        let courses = coursesSnap.data()
-        for (let course in courses) {
-            coursesState.courses.push(courses[course])
-        }
-
+        coursesState.courses = coursesSnap.data().courses
     }
     const commonRef = doc(db, 'courses', 'common')
     const commonSnap = await getDoc(commonRef)
@@ -64,25 +60,61 @@ export  const setCommon = async (common: Common) => {
     await updateDoc(commonRef, common)
 }
 
-export const setCourseDoc = async (course: ICourse) => {
+// export const setCourseDoc = async (course: ICourse) => {
+//
+//     const coursesRef = doc(db, 'courses', 'courses')
+//
+//     await updateDoc(coursesRef, {
+//         [course.id]: course
+//     })
+// }
+//
+// export const removeCourse = async (id: string, imageUrl: string) => {
+//     const coursesRef = doc(db, 'courses', 'courses')
+//
+//     if (imageUrl) {
+//         const imageRef = ref(storage, id)
+//         await deleteObject(imageRef)
+//     }
+//     await updateDoc(coursesRef, {
+//         [id]: deleteField()
+//     })
+// }
 
-    const coursesRef = doc(db, 'courses', 'courses')
+export const addImg = async (id: string, imageFile: File | null): Promise<string | void> => {
 
-    await updateDoc(coursesRef, {
-        [course.id]: course
-    })
+    const imageRef = ref(storage, id)
+    if (imageFile) {
+        await uploadBytes(imageRef, imageFile)
+        return await getDownloadURL(imageRef)
+    } else {
+        return Promise.resolve('')
+    }
+
+
 }
 
-export const removeCourse = async (id: string, imageUrl: string) => {
-    const coursesRef = doc(db, 'courses', 'courses')
+export const addCourseArray = async (course: ICourse) => {
+    const coursesRef = doc(db, "courses", "courses");
 
-    if (imageUrl) {
-        const imageRef = ref(storage, id)
+
+    await updateDoc(coursesRef, {
+        courses: arrayUnion(course)
+    });
+
+}
+
+export const removeCourseArray = async (course: ICourse, isDeleteImage: boolean) => {
+    const coursesRef = doc(db, "courses", "courses");
+
+    if (course.imageUrl && isDeleteImage) {
+        const imageRef = ref(storage, course.id)
         await deleteObject(imageRef)
     }
+
     await updateDoc(coursesRef, {
-        [id]: deleteField()
-    })
+        courses: arrayRemove(course)
+    });
 }
 
 

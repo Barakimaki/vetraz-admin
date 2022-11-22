@@ -1,6 +1,10 @@
 import {Common, COURSES_ACTION_TYPES, ICourse} from "./courses.types";
 import {ActionWithPayload, createAction, withMatcher} from "../../utils/reducer/reducer.utils";
-import {removeCourse, getCoursesState, setCourseDoc, setCommon} from "../../utils/firebase/firebase.utils";
+import {
+    getCoursesState,
+    setCommon,
+    addCourseArray, removeCourseArray
+} from "../../utils/firebase/firebase.utils";
 import {CoursesState} from "./courses.reducer";
 import {ThunkAction} from 'redux-thunk'
 import {RootState} from "../store";
@@ -44,7 +48,7 @@ export const updateCommon = withMatcher((common: Common): UpdateCommon =>
 type ThunkType = ThunkAction<Promise<void>, RootState, unknown, AnyAction>
 
 export const addCourseAsync = (course: ICourse): ThunkType => async (dispatch) => {
-    await setCourseDoc(course)
+    await addCourseArray(course)
     dispatch(addCourse(course))
 
 }
@@ -54,14 +58,15 @@ export const updateCommonAsync = (common: Common): ThunkType => async (dispatch)
     dispatch(updateCommon(common))
 }
 
-export const editCourseAsync = (course: ICourse): ThunkType => async (dispatch) => {
-    await setCourseDoc(course)
-    dispatch(editCourse(course))
+export const editCourseAsync = (newCourse: ICourse, oldCourse: ICourse): ThunkType => async (dispatch) => {
+    await removeCourseArray(oldCourse, false)
+    await addCourseArray(newCourse)
+    dispatch(editCourse(newCourse))
 }
 
-export const deleteCourseAsync = (id: string, imageUrl: string): ThunkType => async (dispatch) => {
-    await removeCourse(id, imageUrl)
-    dispatch(deleteCourse(id))
+export const deleteCourseAsync = (course: ICourse): ThunkType => async (dispatch) => {
+    await removeCourseArray(course, true)
+    dispatch(deleteCourse(course.id))
 }
 
 export const getCoursesStateAsync = (): ThunkType => async (dispatch) => {
