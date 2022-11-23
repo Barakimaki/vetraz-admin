@@ -8,6 +8,7 @@ import {getCoursesStateAsync} from "./store/courses/courses.action";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "./store/store";
 import CourseForm from "./components/courseForm/courseForm.component";
+import Schedule from "./components/schedule/schedule.component";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path='/*' element={<Courses/>}/>
                 <Route path='/edit/:id' element={<CourseForm/>}/>
                 <Route path='/add' element={<CourseForm/>}/>
+                <Route path='/schedule/:id' element={<Schedule/>}/>
             </Routes>
         </div>
     );

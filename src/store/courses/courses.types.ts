@@ -6,6 +6,8 @@ export enum COURSES_ACTION_TYPES {
     UPDATE_COMMON = 'course/UPDATE_COMMON'
 }
 
+
+
 export interface ICourse{
     id: string
     address: string
@@ -16,11 +18,31 @@ export interface ICourse{
     imageUrl: string
     paymentTerm: string
     studentsAge?: {
-        from: number | null,
+        from: number | null
         to: number | null
     }
-    teacherName: string
+    teacherName: string,
+    schedule: IGroup[]
 }
+
+export interface ILesson{
+    from: string
+    to: string
+}
+
+export interface IDay{
+    dayName: string,
+    lessons: ILesson[]
+}
+
+
+export interface IGroup{
+    groupName: string
+    week: IDay[]
+}
+
+
+
 
 export type Common = {
     categories: string[],

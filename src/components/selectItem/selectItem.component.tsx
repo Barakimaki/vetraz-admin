@@ -21,9 +21,6 @@ type Props = {
 
 const SelectItem = ({item, items, name, handleChange, size, common}: Props) => {
 
-    useEffect(() => {
-        console.log(item)
-    })
 
     const dispatch: AppDispatch = useDispatch()
 
@@ -36,17 +33,19 @@ const SelectItem = ({item, items, name, handleChange, size, common}: Props) => {
             categories: [...common.categories],
             paymentTerms: [...common.paymentTerms]
         }
-        if (name === 'Адрес') {
-            newCommon.addresses = [...newCommon.addresses, item]
+        if(item){
+            if (name === 'Адрес') {
+                newCommon.addresses = [...newCommon.addresses, item]
+            }
+            if (name === 'Направление') {
+                newCommon.categories = [...newCommon.categories, item]
+            }
+            if (name === 'Условие оплаты') {
+                newCommon.paymentTerms = [...newCommon.paymentTerms, item]
+            }
+            dispatch(updateCommonAsync(newCommon))
+            setNewItem('')
         }
-        if (name === 'Направление') {
-            newCommon.categories = [...newCommon.categories, item]
-        }
-        if (name === 'Условие оплаты') {
-            newCommon.paymentTerms = [...newCommon.paymentTerms, item]
-        }
-        dispatch(updateCommonAsync(newCommon))
-        setNewItem('')
         setAddNewItem(false)
     }
 

@@ -1,6 +1,7 @@
 import {ICourse} from "../../store/courses/courses.types";
 import {Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import EditIcon from '@mui/icons-material/Edit';
 import style from "./course.module.scss";
 import DeleteButton from "../deleteTaskButton/DeleteButton";
@@ -8,6 +9,7 @@ import {deleteCourseAsync} from "../../store/courses/courses.action";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store/store";
 import {useNavigate} from "react-router-dom";
+import {Schedule} from "@mui/icons-material";
 
 
 type Props = {
@@ -65,6 +67,13 @@ const Course = ({course}:Props) => {
                                 navigate(`/edit/${course.id}`)
                             }}>
                     <EditIcon/>
+                </IconButton>
+                <IconButton color='default'
+                            title='Расписание'
+                            onClick={() => {
+                                navigate(`/schedule/${course.id}`)
+                            }}>
+                    <Schedule />
                 </IconButton>
                 <div className={style.rightAlignItem}>
                     <DeleteButton course={course} handleDelete={deleteCourse}/>

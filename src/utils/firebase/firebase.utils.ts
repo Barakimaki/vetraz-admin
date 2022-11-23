@@ -95,9 +95,7 @@ export const addImg = async (id: string, imageFile: File | null): Promise<string
 }
 
 export const addCourseArray = async (course: ICourse) => {
-    const coursesRef = doc(db, "courses", "courses");
-
-
+    const coursesRef = doc(db, "courses", "courses")
     await updateDoc(coursesRef, {
         courses: arrayUnion(course)
     });
@@ -105,7 +103,8 @@ export const addCourseArray = async (course: ICourse) => {
 }
 
 export const removeCourseArray = async (course: ICourse, isDeleteImage: boolean) => {
-    const coursesRef = doc(db, "courses", "courses");
+
+    const coursesRef = doc(db, "courses", "courses")
 
     if (course.imageUrl && isDeleteImage) {
         const imageRef = ref(storage, course.id)

@@ -31,7 +31,7 @@ const CourseForm = () => {
 
     const dispatch: AppDispatch = useDispatch()
 
-    let course: ICourse | null = useSelector(selectCourse(id))
+    let course = useSelector(selectCourse(id))
 
     const categories = useSelector(selectCategories) || []
     const paymentTerms = useSelector(selectPaymentTerms) || []
@@ -53,6 +53,7 @@ const CourseForm = () => {
     let [address, setAddress] = useState(course?.address || '')
     let [courseId, setCourseId] = useState(course?.id || uuidv4())
 
+
     let [imageFile, setImageFile] = useState(null as (null | File))
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +74,8 @@ const CourseForm = () => {
             imageUrl: url || course?.imageUrl || '',
             paymentTerm,
             studentsAge,
-            teacherName
+            teacherName,
+            schedule: course?.schedule || []
         }
         course
             ? dispatch(editCourseAsync(newCourseData, course))
