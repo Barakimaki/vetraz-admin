@@ -10,7 +10,7 @@ import {
 } from "../../store/courses/courses.selectors";
 import {Common, ICourse} from "../../store/courses/courses.types";
 import {SelectChangeEvent} from "@mui/material/Select";
-import SelectItem from "../selectItem/selectItem.component";
+import SelectItem from "../../components/selectItem/selectItem.component";
 import {v4 as uuidv4} from 'uuid'
 import {addCourseAsync, editCourseAsync} from "../../store/courses/courses.action";
 import {AppDispatch} from "../../store/store";

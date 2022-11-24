@@ -1,10 +1,13 @@
 import React from 'react';
-import  {SelectChangeEvent} from "@mui/material/Select";
+import {SelectChangeEvent} from "@mui/material/Select";
 
 import {useSelector} from "react-redux";
 import {selectAddresses, selectCategories, selectPaymentTerms} from "../../store/courses/courses.selectors";
 import SelectItem from "../selectItem/selectItem.component";
 import {Common} from "../../store/courses/courses.types";
+import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from "@mui/material/IconButton";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     category: string,
@@ -24,6 +27,8 @@ const Filter = ({
                     handlePaymentTermChange
                 }: Props) => {
 
+    const navigate = useNavigate()
+
     const categories = useSelector(selectCategories) || []
     const addresses = useSelector(selectAddresses) || []
     const paymentTerms = useSelector(selectPaymentTerms) || []
@@ -33,7 +38,6 @@ const Filter = ({
         addresses,
         paymentTerms
     }
-
 
 
     return (
@@ -59,6 +63,11 @@ const Filter = ({
                         size={320}
                         common={common}
             />
+            <IconButton color="default" size='large' title='настройки'>
+                <SettingsIcon  onClick={() => {
+                    navigate('/settings')
+                }}/>
+            </IconButton>
         </>
     );
 };

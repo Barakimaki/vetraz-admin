@@ -49,15 +49,7 @@ const SelectItem = ({item, items, name, handleChange, size, common}: Props) => {
         setAddNewItem(false)
     }
 
-    const handleDeleteItem = (item: string) => {
-        const newCommon: Common = {
-            addresses: [...common.addresses].filter(address => (address !== item)),
-            categories: [...common.categories].filter(category => (category !== item)),
-            paymentTerms: [...common.paymentTerms].filter(paymentTerm => (paymentTerm !== item))
-        }
-        dispatch(updateCommonAsync(newCommon))
 
-    }
 
     return (
         <FormControl sx={{m: 1, minWidth: size}} size="small">
@@ -70,11 +62,7 @@ const SelectItem = ({item, items, name, handleChange, size, common}: Props) => {
                 <MenuItem value="">
                     <em>Все</em>
                 </MenuItem>
-                {items.map(item => <MenuItem key={item} value={item}>{item} </MenuItem>
-                    // <DeleteButton id={item}
-                    // handleDelete={handleDeleteItem}
-                    // />
-                )}
+                {items.map(item => <MenuItem key={item} value={item}>{item} </MenuItem>)}
                 {addNewItem
                     ? <div>
                         <Input placeholder="Новое значение" onChange={(e: ChangeEvent<HTMLInputElement>) => {
