@@ -10,6 +10,8 @@ import {editCourseAsync} from "../../store/courses/courses.action";
 import FormControl from "@mui/material/FormControl";
 
 
+let days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+
 const Schedule = () => {
 
     const dispatch: AppDispatch = useDispatch()
@@ -17,7 +19,6 @@ const Schedule = () => {
     const [newGroup, setNewGroup] = useState('')
     const [addNewGroup, setAddNewGroup] = useState(false)
     const [newLesson, setNewLesson] = useState({from: '', to: ''})
-    const [addNewLesson, setAddNewLesson] = useState([false, false, false, false, false, false, false])
 
     const navigate = useNavigate()
 
@@ -40,13 +41,13 @@ const Schedule = () => {
     const handleAddGroup = (groupName: string) => {
         let newSchedule = [...schedule, {
             groupName, week: [
-                {dayName: 'Понедельник', lessons: []},
-                {dayName: 'Вторник', lessons: []},
-                {dayName: 'Среда', lessons: []},
-                {dayName: 'Четверг', lessons: []},
-                {dayName: 'Пятница', lessons: []},
-                {dayName: 'Суббота', lessons: []},
-                {dayName: 'Воскресенье', lessons: []}
+                {lessons: []},
+                {lessons: []},
+                {lessons: []},
+                {lessons: []},
+                {lessons: []},
+                {lessons: []},
+                {lessons: []}
             ]
 
         }]
@@ -55,12 +56,11 @@ const Schedule = () => {
     }
 
     const handleAddLesson = (lesson: ILesson, groupIndex: number, dayIndex: number) => {
-        let newSchedule = JSON.parse(JSON.stringify(schedule))
-        newSchedule[groupIndex].week[dayIndex].lessons = [...newSchedule[groupIndex].week[dayIndex].lessons, lesson]
-        setSchedule(newSchedule)
-        let addLesson = [...addNewLesson]
-        addLesson[dayIndex] = false
-        setAddNewLesson(addLesson)
+        if (lesson.from && lesson.to) {
+            let newSchedule = JSON.parse(JSON.stringify(schedule))
+            newSchedule[groupIndex].week[dayIndex].lessons = [...newSchedule[groupIndex].week[dayIndex].lessons, lesson]
+            setSchedule(newSchedule)
+        }
         setNewLesson({from: '', to: ''})
     }
 
@@ -86,39 +86,27 @@ const Schedule = () => {
                         <div className={style.week}>
                             {group.week.map((day, dayIndex) => {
                                 return <div className={style.day}>
-                                    <h3>{day.dayName}</h3>
+                                    <h3>{days[dayIndex]}</h3>
                                     <hr/>
                                     {day.lessons.map(lesson => <p>{lesson.from} - {lesson.to}</p>)}
-                                    {addNewLesson[dayIndex]
-                                        ? <div>
-                                            <FormControl variant="standard" sx={{m: 1, width: 60}}>
-                                                <Input type='text' placeholder="с"
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           setNewLesson({...newLesson, from: e.target.value})
-                                                       }} defaultValue={''}/>
-                                            </FormControl>
-                                            <FormControl variant="standard" sx={{m: 1, width: 60}}>
-                                                <Input type='text' placeholder="по"
-                                                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                           setNewLesson({...newLesson, to: e.target.value})
-                                                       }} defaultValue={''}/>
-                                            </FormControl>
-                                            <Button variant="contained"
-                                                    onClick={() => handleAddLesson(newLesson, groupIndex, dayIndex)}>
-                                                Принять
-                                            </Button>
-                                        </div>
-                                        : <div>
-                                            <Button variant="contained" onClick={() => {
-                                                let addLesson = [...addNewLesson]
-                                                addLesson[dayIndex] = true
-                                                setAddNewLesson(addLesson)
-                                            }}>
-                                                Добавить
-                                            </Button>
-                                        </div>
-                                    }
-
+                                    <div>
+                                        <FormControl variant="standard" sx={{m: 1, width: 60}}>
+                                            <Input type='text' placeholder="с"
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                       setNewLesson({...newLesson, from: e.target.value})
+                                                   }} defaultValue={''}/>
+                                        </FormControl>
+                                        <FormControl variant="standard" sx={{m: 1, width: 60}}>
+                                            <Input type='text' placeholder="по"
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                       setNewLesson({...newLesson, to: e.target.value})
+                                                   }} defaultValue={''}/>
+                                        </FormControl>
+                                        <Button variant="contained"
+                                                onClick={() => handleAddLesson(newLesson, groupIndex, dayIndex)}>
+                                            Принять
+                                        </Button>
+                                    </div>
                                 </div>
                             })}
                         </div>

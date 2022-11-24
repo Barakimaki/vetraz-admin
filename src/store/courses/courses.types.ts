@@ -31,7 +31,6 @@ export interface ILesson{
 }
 
 export interface IDay{
-    dayName: string,
     lessons: ILesson[]
 }
 
