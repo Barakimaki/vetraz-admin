@@ -1,13 +1,15 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {AppDispatch} from "../../store/store";
-import {useDispatch, useSelector} from "react-redux";
-import {selectCourse} from "../../store/courses/courses.selectors";
-import {Button, Input} from "@mui/material";
-import {ICourse, IGroup, ILesson} from "../../store/courses/courses.types";
+import React, {ChangeEvent, useEffect, useState} from 'react'
+import {useNavigate, useParams} from "react-router-dom"
+import {AppDispatch} from "../../store/store"
+import {useDispatch, useSelector} from "react-redux"
+import {selectCourse} from "../../store/courses/courses.selectors"
+import {Button, Input} from "@mui/material"
+import {ICourse, IGroup, ILesson} from "../../store/courses/courses.types"
 import style from './schedule.module.scss'
-import {editCourseAsync} from "../../store/courses/courses.action";
-import FormControl from "@mui/material/FormControl";
+import {editCourseAsync} from "../../store/courses/courses.action"
+import FormControl from "@mui/material/FormControl"
+import ClearIcon from '@mui/icons-material/Clear'
+import IconButton from "@mui/material/IconButton"
 
 
 let days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
@@ -57,11 +59,34 @@ const Schedule = () => {
 
     const handleAddLesson = (lesson: ILesson, groupIndex: number, dayIndex: number) => {
         if (lesson.from && lesson.to) {
-            let newSchedule = JSON.parse(JSON.stringify(schedule))
+            let newSchedule: IGroup[] = JSON.parse(JSON.stringify(schedule))
             newSchedule[groupIndex].week[dayIndex].lessons = [...newSchedule[groupIndex].week[dayIndex].lessons, lesson]
+            newSchedule[groupIndex].week[dayIndex].lessons = newSchedule[groupIndex].week[dayIndex].lessons.sort((a, b) => {
+                if (a.from < b.from)
+                    return -1
+                if (a.from > b.from)
+                    return 1
+                return 0
+            })
             setSchedule(newSchedule)
         }
         setNewLesson({from: '', to: ''})
+    }
+
+    const deleteLesson = (groupIndex: number, dayIndex: number, lessonIndex: number) => {
+        let newSchedule: IGroup[] = JSON.parse(JSON.stringify(schedule))
+        newSchedule[groupIndex].week[dayIndex].lessons = newSchedule[groupIndex].week[dayIndex].lessons.filter((lesson, index)=>{
+            return index !== lessonIndex
+        })
+        setSchedule(newSchedule)
+    }
+
+    const deleteGroup = (groupIndex: number) => {
+        let newSchedule: IGroup[] = JSON.parse(JSON.stringify(schedule))
+        newSchedule = newSchedule.filter((group, index)=>{
+            return index !== groupIndex
+        })
+        setSchedule(newSchedule)
     }
 
     const saveSchedule = async () => {
@@ -82,13 +107,28 @@ const Schedule = () => {
                 <h1>{course?.courseName}</h1>
                 {schedule.map((group, groupIndex) => {
                     return <div>
-                        <h2>{group.groupName}</h2>
+                        <h2>{group.groupName}
+                            <IconButton color='error'
+                                        title='Удалить группу'
+                                        onClick={() => deleteGroup(groupIndex)}
+                            >
+                                <ClearIcon/>
+                            </IconButton>
+                        </h2>
                         <div className={style.week}>
                             {group.week.map((day, dayIndex) => {
                                 return <div className={style.day}>
                                     <h3>{days[dayIndex]}</h3>
                                     <hr/>
-                                    {day.lessons.map(lesson => <p>{lesson.from} - {lesson.to}</p>)}
+                                    {day.lessons.map((lesson, lessonIndex) => <div>
+                                            <span>{lesson.from} - {lesson.to}</span>
+                                            <IconButton color='error'
+                                                        title='Удалить занятие'
+                                                        onClick={() => deleteLesson(groupIndex, dayIndex, lessonIndex)}>
+                                                <ClearIcon/>
+                                            </IconButton>
+                                        </div>
+                                    )}
                                     <div>
                                         <FormControl variant="standard" sx={{m: 1, width: 60}}>
                                             <Input type='text' placeholder="с"
